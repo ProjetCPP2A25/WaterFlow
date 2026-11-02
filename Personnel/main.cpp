@@ -12,6 +12,7 @@
 #include <QGraphicsDropShadowEffect>
 #include <QStyle>
 #include "personnel.h"
+#include "connection.h"
 
 static const char *STYLE = R"(
 QWidget { background:#F4F7FB; color:#172B4D; font-family:"Segoe UI"; font-size:9pt; }
@@ -39,9 +40,9 @@ QPushButton#btnExporter:hover { background:#233D68; }
 QLineEdit, QComboBox, QDateEdit { background:#FFFFFF; border:1px solid #DCE4EF; border-radius:8px; padding:9px 10px; selection-background-color:#2878F0; }
 QLineEdit:focus, QComboBox:focus, QDateEdit:focus { border:1px solid #2878F0; }
 QComboBox::drop-down { border:none; width:24px; }
-QTableWidget { background:white; border:none; alternate-background-color:#F7F9FC; selection-background-color:#E6F0FF; selection-color:#172B4D; gridline-color:#EEF2F7; outline:none; }
-QTableWidget::item { padding-left:7px; border-bottom:1px solid #F0F3F8; }
-QTableWidget::item:selected { color:#172B4D; }
+QTableView { background:white; border:none; alternate-background-color:#F7F9FC; selection-background-color:#E6F0FF; selection-color:#172B4D; gridline-color:#EEF2F7; outline:none; }
+QTableView::item { padding-left:7px; border-bottom:1px solid #F0F3F8; }
+QTableView::item:selected { color:#172B4D; }
 QHeaderView::section { background:#F7F9FC; color:#61718A; padding:11px 7px; border:none; border-bottom:1px solid #E5EBF3; font-weight:700; }
 QDialog#loginDialog { background:#FFFFFF; }
 QFrame#loginBrandPanel { background:#101F3C; border:none; }
@@ -165,6 +166,14 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("WaterFlow");
     app.setStyle("Fusion");
     app.setStyleSheet(STYLE);
+
+    // Une seule connexion à la base (Singleton), établie avant d'ouvrir les fenêtres.
+    if (!Connection::instance().createconnection()) {
+        QMessageBox::critical(nullptr, "Base de données",
+            "Connexion à la base Oracle impossible :\n" + Connection::instance().lastError());
+        return 1;
+    }
+
     LoginDialog login;
     if (login.exec()!=QDialog::Accepted) return 0;
     Personnel fenetre;
