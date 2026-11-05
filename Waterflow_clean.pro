@@ -9,15 +9,18 @@ SOURCES += \
     mainwindow.cpp \
     connection.cpp \
     commande.cpp \
-    commandes.cpp
+    commandes.cpp \
+    personnel.cpp
 
 HEADERS += \
     mainwindow.h \
     connection.h \
     commande.h \
     commandes.h \
+    personnel.h \
     style.h \
     logindialog.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    personnel.ui
